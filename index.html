@@ -103,6 +103,26 @@
             width: 100%;
         }
 
+        .btn-get-started {
+            padding: 0.75rem 1.5rem;
+            background: var(--pulse);
+            color: white !important;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+        }
+
+        .btn-get-started::after {
+            display: none;
+        }
+
+        .btn-get-started:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 59, 59, 0.4);
+        }
+
         /* Hero Section */
         .hero {
             min-height: 90vh;
@@ -456,6 +476,138 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--steel) 0%, var(--iron) 100%);
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            border: 1px solid var(--accent);
+            position: relative;
+            animation: slideUp 0.4s ease;
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 2rem;
+            color: var(--silver);
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--accent);
+        }
+
+        .modal h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .modal p {
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(232, 232, 232, 0.8);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--silver);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 1.25rem;
+            background: var(--accent);
+            color: var(--iron);
+            border: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+        }
+
+        .form-submit:hover {
+            background: var(--silver);
+            transform: translateY(-2px);
+        }
+
+        .form-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .form-success {
+            display: none;
+            padding: 1.5rem;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--accent);
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .form-success.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -463,10 +615,11 @@
         <nav>
             <div class="logo">IronHeart.AI</div>
             <div class="nav-links">
-                <a href="#system">System</a>
+                <a href="#system">Conversational System</a>
                 <a href="#apis">APIs</a>
-                <a href="#cases">Use Cases</a>
-                <a href="#contact">Contact</a>
+                <a href="#robots">Brain for Robots</a>
+                <a href="#offline">Offline-First</a>
+                <a href="#" class="btn-get-started" onclick="openModal(event)">Get started</a>
             </div>
         </nav>
 
@@ -512,7 +665,7 @@
                 </div>
 
                 <div class="cta-group">
-                    <a href="#contact" class="btn btn-primary">Request Technical Briefing</a>
+                    <a href="#" class="btn btn-primary" onclick="openModal(event)">Request Technical Briefing</a>
                 </div>
             </div>
 
@@ -569,7 +722,7 @@
         </div>
     </section>
 
-    <section class="features" style="background: transparent;">
+    <section class="features" id="system" style="background: transparent;">
         <div class="container">
             <h2 class="section-title">Emotion and Event-Driven Conversational System</h2>
             <p class="hero-description" style="max-width: 900px; margin-bottom: 1.5rem;">
@@ -695,6 +848,10 @@
                     <span style="color: var(--accent);">This is an interaction operating system.</span>
                 </p>
             </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="#" class="btn btn-primary" onclick="openModal(event)">Request Technical Briefing</a>
+            </div>
         </div>
     </section>
 
@@ -720,10 +877,14 @@
                     A place to test interaction systems before scaling them to production.
                 </p>
             </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="#" class="btn btn-primary" onclick="openModal(event)">Request Technical Briefing</a>
+            </div>
         </div>
     </section>
 
-    <section class="features" style="padding: 8rem 0; background: linear-gradient(135deg, rgba(45, 45, 45, 0.2) 0%, rgba(26, 26, 26, 0.2) 100%); border-top: 1px solid rgba(255, 255, 255, 0.1);">
+    <section class="features" id="robots" style="padding: 8rem 0; background: linear-gradient(135deg, rgba(45, 45, 45, 0.2) 0%, rgba(26, 26, 26, 0.2) 100%); border-top: 1px solid rgba(255, 255, 255, 0.1);">
         <div class="container">
             <h2 class="section-title">Brain for Robots and Intelligent Devices</h2>
             <p class="hero-description" style="max-width: 900px; margin-bottom: 4rem; font-size: 1.1rem;">
@@ -817,10 +978,14 @@
                     <span style="color: var(--accent);">Voice becomes an active cognitive interface between the system and the world.</span>
                 </p>
             </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="#" class="btn btn-primary" onclick="openModal(event)">Request Technical Briefing</a>
+            </div>
         </div>
     </section>
 
-    <section class="features" style="padding: 6rem 0;">
+    <section class="features" id="offline" style="padding: 6rem 0;">
         <div class="container">
             <h2 class="section-title">Designed to work offline</h2>
             <p class="hero-description" style="max-width: 900px; margin-bottom: 3rem; font-size: 1.1rem;">
@@ -881,10 +1046,14 @@
                     <span style="color: var(--accent);">You stay in control of your data.</span>
                 </p>
             </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="#" class="btn btn-primary" onclick="openModal(event)">Request Technical Briefing</a>
+            </div>
         </div>
     </section>
 
-    <section class="tech-specs" style="padding: 6rem 0;">
+    <section class="tech-specs" id="apis" style="padding: 6rem 0;">
         <div class="container">
             <h2 class="section-title">APIs & SDKs</h2>
             <p class="hero-description" style="max-width: 800px; margin-bottom: 3rem;">
@@ -916,6 +1085,10 @@
                     <span style="color: var(--accent);">A voice control platform.</span>
                 </p>
             </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="#" class="btn btn-primary" onclick="openModal(event)">Request Technical Briefing</a>
+            </div>
         </div>
     </section>
 
@@ -943,7 +1116,7 @@
         </div>
     </section>
 
-    <section class="tech-specs" style="padding: 6rem 0;">
+    <section class="tech-specs" id="cases" style="padding: 6rem 0;">
         <div class="container">
             <h2 class="section-title">Use Cases</h2>
             
@@ -965,6 +1138,33 @@
                 </div>
                 <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
                     <h3 style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent);">VR & AR Characters</h3>
+                </div>
+                <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+                    <h3 style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent);">Emergency & Crisis Systems</h3>
+                </div>
+                <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+                    <h3 style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent);">Industrial & Field Operations</h3>
+                </div>
+                <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+                    <h3 style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent);">Enterprise Knowledge Agents</h3>
+                </div>
+                <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+                    <h3 style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent);">Education & Training Systems</h3>
+                </div>
+                <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+                    <h3 style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent);">Healthcare & Elderly Care</h3>
+                </div>
+                <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+                    <h3 style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent);">Government & Public Services</h3>
+                </div>
+                <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+                    <h3 style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent);">AI Influencer</h3>
+                </div>
+                <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+                    <h3 style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent);">Autonomous Smart Spaces</h3>
+                </div>
+                <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+                    <h3 style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent);">Paid Private Companions</h3>
                 </div>
             </div>
         </div>
@@ -989,17 +1189,50 @@
     <div class="container">
         <footer>
             <div class="footer-content">
-                <div class="footer-links">
-                    <a href="#">Privacy</a>
-                    <a href="#">Terms</a>
-                    <a href="#">Documentation</a>
-                    <a href="#">Support</a>
-                </div>
                 <div class="copyright">
-                    © 2024 IronHeart.AI. All rights reserved.
+                    © 2025 IronHeart.AI. All rights reserved.
                 </div>
             </div>
         </footer>
+    </div>
+
+    <!-- Contact Form Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2>Request Technical Briefing</h2>
+            <p>Fill out the form below and we'll get back to you within 24 hours.</p>
+            
+            <form id="contactForm" action="https://formspree.io/f/xnjawzwq" method="POST">
+                <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" name="company">
+                </div>
+                
+                <div class="form-group">
+                    <label for="usecase">Use Case / Interest Area</label>
+                    <textarea id="usecase" name="usecase" placeholder="Tell us about your project or interest in IronHeart.AI..."></textarea>
+                </div>
+                
+                <button type="submit" class="form-submit">Send Request</button>
+            </form>
+
+            <div class="form-success" id="formSuccess">
+                <p style="color: var(--accent); font-weight: 600; margin: 0;">
+                    ✓ Thank you! We'll be in touch soon.
+                </p>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1017,16 +1250,87 @@
             waveform.appendChild(bar);
         }
 
+        // Modal functionality
+        function openModal(event) {
+            event.preventDefault();
+            document.getElementById('contactModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('contactModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on outside click
+        document.getElementById('contactModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Form submission handling
+        const form = document.getElementById('contactForm');
+        const formSuccess = document.getElementById('formSuccess');
+
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const submitBtn = form.querySelector('.form-submit');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    form.style.display = 'none';
+                    formSuccess.classList.add('active');
+                    
+                    setTimeout(() => {
+                        closeModal();
+                        form.reset();
+                        form.style.display = 'block';
+                        formSuccess.classList.remove('active');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Send Request';
+                    }, 3000);
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                alert('There was an error submitting the form. Please try again or email us directly.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Request';
+            }
+        });
+
         // Smooth scroll for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                const href = this.getAttribute('href');
+                if (href !== '#' && href !== '#contact') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
                 }
             });
         });
@@ -1051,6 +1355,11 @@
             el.style.transform = 'translateY(30px)';
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
+        });
+
+        // Update all "Request Technical Briefing" buttons to open modal
+        document.querySelectorAll('a[href="#contact"]').forEach(link => {
+            link.addEventListener('click', openModal);
         });
     </script>
 </body>
